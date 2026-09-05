@@ -14,8 +14,22 @@ public class RAImpl implements RA {
 
     @Override
     public Relation select(Relation rel, Predicate p) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'select'");
+        int num_rows = rel.getSize();
+        
+        // Creating new relation
+        Relation new_rel = new RelationBuilder()
+                .attributeNames(rel.getAttrs())
+                .attributeTypes(rel.getTypes())
+                .build();
+
+        // Inserts row only if it fulfills the predicate
+        for (int i = 0; i < num_rows; i++) {
+            if (p.check(rel.getRow(i)) == true) {
+                new_rel.insert(rel.getRow(i));
+            }
+        }
+
+        return new_rel;
     }
 
     @Override
@@ -36,7 +50,7 @@ public class RAImpl implements RA {
         
         int n = rel.getAttrs().size();
         
-        // Removes attributes that were not given in the attrs
+        // Removes types based on the given attrs
         for (int i = n - 1; i >= 0; i--) {
             boolean isAttr = false;
             // Check if i is in AttrIndex 
