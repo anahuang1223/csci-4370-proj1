@@ -5,6 +5,8 @@ import java.util.List;
 import uga.csx370.mydb.Predicate;
 import uga.csx370.mydb.RA;
 import uga.csx370.mydb.Relation;
+import uga.csx370.mydb.Cell;
+import uga.csx370.mydb.RelationBuilder;
 
 public class RAImpl implements RA {
 
