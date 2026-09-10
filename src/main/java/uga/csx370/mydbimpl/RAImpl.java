@@ -2,6 +2,8 @@ package uga.csx370.mydbimpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import uga.csx370.mydb.Cell;
 import uga.csx370.mydb.Predicate;
@@ -139,6 +141,8 @@ public class RAImpl implements RA {
                 .attributeNames(rel1.getAttrs())
                 .attributeTypes(rel1.getTypes())
                 .build();
+
+        Set<List<Cell>> intersection = new HashSet<>();
         for (int i=0; i<r2size; i++) {
             boolean dupe = false;
             List<Cell> cur = rel2.getRow(i);
@@ -148,8 +152,11 @@ public class RAImpl implements RA {
                 }
             }
             if (dupe) {
-                combined.insert(rel2.getRow(i));
+                intersection.add(cur);
             }
+        }
+        for (List<Cell> row : intersection) {
+            combined.insert(row);
         }
         return combined;
     }
