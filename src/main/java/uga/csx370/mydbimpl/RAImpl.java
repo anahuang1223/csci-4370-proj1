@@ -135,8 +135,29 @@ public class RAImpl implements RA {
 
     @Override
     public Relation join(Relation rel1, Relation rel2, Predicate p) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'join'");
+        for (String attr : rel1.getAttrs()) {
+            if (rel2.hasAttr(attr)) {
+                throw new IllegalArgumentException("Relations have common attribute: " + attr);
+            }
+        }
+        List<String> unionAttrs = new ArrayList<>(rel1.getAttrs());
+        unionAttrs.addAll(rel2.getAttrs());
+        List<Type> types = new ArrayList<>(rel1.getTypes());
+        types.addAll(rel2.getTypes());
+        Relation result = new RelationBuilder()
+            .attributeNames(unionAttrs)
+            .attributeTypes(types)
+            .build();
+        for (int i = 0; i < rel1.getSize(); i++) {
+            for (int j = 0; j < rel2.getSize(); j++) {
+                List<Cell> row = new ArrayList<>(rel1.getRow(i));
+                row.addAll(rel2.getRow(j));
+                if (p.check(row)) {
+                    result.insert(row);
+                }
+            }
+        }
+        return result;
     }
 
 }
