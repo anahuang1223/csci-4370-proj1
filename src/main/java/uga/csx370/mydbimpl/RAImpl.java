@@ -100,21 +100,87 @@ public class RAImpl implements RA {
     @Override
     public Relation union(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'union'");
+        int r1size = rel1.getSize();
+        int r2size = rel2.getSize();
+        if (!rel1.getTypes().equals(rel2.getTypes())) {
+            throw new IllegalArgumentException("Relations must have the same number of attributes and of the same type.");
+        } 
+        Relation combined = new RelationBuilder() 
+                .attributeNames(rel1.getAttrs())
+                .attributeTypes(rel1.getTypes())
+                .build();
+        for (int i=0; i<r1size; i++) {
+            combined.insert(rel1.getRow(i));
+        }
+        for (int i=0; i<r2size; i++) {
+            boolean dupe = false;
+            List<Cell> cur = rel2.getRow(i);
+            for (int j=0; j<r1size; j++) {
+                if (rel1.getRow(j).equals(cur)) {
+                    dupe = true;
+                }
+            }
+            if (!dupe) {
+                combined.insert(rel2.getRow(i));
+            }
+        }
+        return combined;
     }
 
     @Override
     public Relation intersect(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'intersect'");
+        int r1size = rel1.getSize();
+        int r2size = rel2.getSize();
+        if (!rel1.getTypes().equals(rel2.getTypes())) {
+            throw new IllegalArgumentException("Relations must have the same number of attributes and of the same type.");
+        } 
+        Relation combined = new RelationBuilder() 
+                .attributeNames(rel1.getAttrs())
+                .attributeTypes(rel1.getTypes())
+                .build();
+        for (int i=0; i<r2size; i++) {
+            boolean dupe = false;
+            List<Cell> cur = rel2.getRow(i);
+            for (int j=0; j<r1size; j++) {
+                if (rel1.getRow(j).equals(cur)) {
+                    dupe = true;
+                }
+            }
+            if (dupe) {
+                combined.insert(rel2.getRow(i));
+            }
+        }
+        return combined;
     }
 
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'diff'");
+        int r1size = rel1.getSize();
+        int r2size = rel2.getSize();
+        if (!rel1.getTypes().equals(rel2.getTypes())) {
+            throw new IllegalArgumentException("Relations must have the same number of attributes and of the same type.");
+        } 
+        Relation combined = new RelationBuilder() 
+                .attributeNames(rel1.getAttrs())
+                .attributeTypes(rel1.getTypes())
+                .build();
+        for (int i=0; i<r1size; i++) {
+            boolean dupe = false;
+            List<Cell> cur = rel1.getRow(i);
+            for (int j=0; j<r2size; j++) {
+                if (rel2.getRow(j).equals(cur)) {
+                    dupe = true;
+                }
+            }
+            if (!dupe) {
+                combined.insert(rel1.getRow(i));
+            }
+        }
+        return combined;
     }
-
+    
     @Override
     public Relation rename(Relation rel, List<String> origAttr, List<String> renamedAttr) {
         // TODO Auto-generated method stub
@@ -135,8 +201,29 @@ public class RAImpl implements RA {
 
     @Override
     public Relation join(Relation rel1, Relation rel2, Predicate p) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'join'");
+        for (String attr : rel1.getAttrs()) {
+            if (rel2.hasAttr(attr)) {
+                throw new IllegalArgumentException("Relations have common attribute: " + attr);
+            }
+        }
+        List<String> unionAttrs = new ArrayList<>(rel1.getAttrs());
+        unionAttrs.addAll(rel2.getAttrs());
+        List<Type> types = new ArrayList<>(rel1.getTypes());
+        types.addAll(rel2.getTypes());
+        Relation result = new RelationBuilder()
+            .attributeNames(unionAttrs)
+            .attributeTypes(types)
+            .build();
+        for (int i = 0; i < rel1.getSize(); i++) {
+            for (int j = 0; j < rel2.getSize(); j++) {
+                List<Cell> row = new ArrayList<>(rel1.getRow(i));
+                row.addAll(rel2.getRow(j));
+                if (p.check(row)) {
+                    result.insert(row);
+                }
+            }
+        }
+        return result;
     }
 
 }
