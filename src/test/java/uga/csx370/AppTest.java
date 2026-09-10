@@ -48,6 +48,7 @@ public class AppTest {
         // Selects rows where an instructor's dept_name is "Accounting"
         Predicate isAccounting = row -> row.get(2).getAsString().equals("Accounting");
         Relation r1 = ra_test.select(instructor, isAccounting);
+        r1.print();
         if (r1.getSize() != 4) {
             System.out.println("isAccounting: FAIL");
             isSuccess = false;
@@ -58,6 +59,7 @@ public class AppTest {
         // Selects rows where an instructor's salary is > 80000
         Predicate salary_gt_80K = row -> row.get(3).getAsDouble() > 80000;
         Relation r2 = ra_test.select(instructor, salary_gt_80K);
+        r2.print();
         if (r2.getSize() != 25) {
             System.out.println("salary_gt_80K: FAIL");
             isSuccess = false;
@@ -69,6 +71,7 @@ public class AppTest {
         // Selects rows where a student's total_credits > 100 and dept_name is "Civil Eng."
         Predicate credits_civil_eng = row -> row.get(3).getAsInt() > 100 && row.get(2).getAsString().equals("Civil Eng.");
         Relation r3 = ra_test.select(student, credits_civil_eng);
+        r3.print();
         if (r3.getSize() != 23) {
             System.out.println("credits_civil_eng: FAIL");
             isSuccess = false;
