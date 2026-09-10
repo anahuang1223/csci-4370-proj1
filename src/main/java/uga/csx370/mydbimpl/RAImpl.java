@@ -110,7 +110,8 @@ public class RAImpl implements RA {
         Relation combined = new RelationBuilder() 
                 .attributeNames(rel1.getAttrs())
                 .attributeTypes(rel1.getTypes())
-                .build();
+                .build(); 
+        Set<List<Cell>> unionSet = new HashSet<>();
         for (int i=0; i<r1size; i++) {
             combined.insert(rel1.getRow(i));
         }
@@ -123,8 +124,11 @@ public class RAImpl implements RA {
                 }
             }
             if (!dupe) {
-                combined.insert(rel2.getRow(i));
+                unionSet.add(cur);
             }
+        }
+        for (List<Cell> row : unionSet) {
+            combined.insert(row);
         }
         return combined;
     }
@@ -173,6 +177,7 @@ public class RAImpl implements RA {
                 .attributeNames(rel1.getAttrs())
                 .attributeTypes(rel1.getTypes())
                 .build();
+        Set<List<Cell>> difference = new HashSet<>();
         for (int i=0; i<r1size; i++) {
             boolean dupe = false;
             List<Cell> cur = rel1.getRow(i);
@@ -182,8 +187,11 @@ public class RAImpl implements RA {
                 }
             }
             if (!dupe) {
-                combined.insert(rel1.getRow(i));
+                difference.add(cur);
             }
+        }
+        for (List<Cell> row : difference) {
+            combined.insert(row);
         }
         return combined;
     }
