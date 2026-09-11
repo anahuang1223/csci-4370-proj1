@@ -50,13 +50,13 @@ public class Driver {
         // projecting the instructor IDs: PROJECT [i_ID] (cyb_adv)
         Relation cyb_instr = engine.project(cyb_adv, List.of("i_ID"));
 
-        // joining with instructor to get access to name: JOIN [cyb_instr.i_ID=instructor.ID]
+        // joining with instructor to get access to name: JOIN [cyb_instr.i_ID=instructor.ID] (instructor)
         Relation instr_cyb = engine.join(instructor, cyb_instr, row -> row.get(0).getAsString().equals(row.get(4).getAsString()));
 
-        // projecting the ID and names of instructors who advise students in the Cybernetics department: PROJECT [ID, name]
+        // projecting the ID and names of instructors who advise students in the Cybernetics department: PROJECT [ID, name] (instr_cyb)
         Relation instr_cyb_info = engine.project(instr_cyb, List.of("instr_ID", "name"));
 
-        // intersecting instructors who taught in Fall 2004 & instructors who advise students in the Cybernetics department
+        // intersecting instructors who taught in Fall 2004 & instructors who advise students in the Cybernetics department: instr_cyb_info INTERSECT instr_f25
         Relation instr_combined = engine.intersect(instr_f25, instr_cyb_info);
 
         instr_combined.print();
