@@ -198,14 +198,63 @@ public class RAImpl implements RA {
     
     @Override
     public Relation rename(Relation rel, List<String> origAttr, List<String> renamedAttr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rename'");
+        // origAttr and renamedAttr must line up one-to-one
+        if (origAttr.size() != renamedAttr.size()) {
+            throw new IllegalArgumentException("origAttr and renamedAttr must have the same number of attributes.");
+        }
+
+        // Start from the current attribute names, then swap in the new names
+        List<String> newAttrs = new ArrayList<>(rel.getAttrs());
+        for (int i = 0; i < origAttr.size(); i++) {
+            if (!rel.hasAttr(origAttr.get(i))) {
+                throw new IllegalArgumentException("Attribute does not exist: " + origAttr.get(i));
+            }
+            newAttrs.set(rel.getAttrIndex(origAttr.get(i)), renamedAttr.get(i));
+        }
+
+        // Same types, same rows, only the attribute names change
+        Relation newRel = new RelationBuilder()
+                .attributeNames(newAttrs)
+                .attributeTypes(rel.getTypes())
+                .build();
+
+        for (int i = 0; i < rel.getSize(); i++) {
+            newRel.insert(rel.getRow(i));
+        }
+
+        return newRel;
     }
 
     @Override
     public Relation cartesianProduct(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cartesianProduct'");
+        // No shared attribute names are allowed
+        for (String attr : rel1.getAttrs()) {
+            if (rel2.hasAttr(attr)) {
+                throw new IllegalArgumentException("Relations have common attribute: " + attr);
+            }
+        }
+
+        // Result schema: rel1 attributes/types followed by rel2 attributes/types
+        List<String> attrs = new ArrayList<>(rel1.getAttrs());
+        attrs.addAll(rel2.getAttrs());
+        List<Type> types = new ArrayList<>(rel1.getTypes());
+        types.addAll(rel2.getTypes());
+
+        Relation result = new RelationBuilder()
+                .attributeNames(attrs)
+                .attributeTypes(types)
+                .build();
+
+        // Pair every row of rel1 with every row of rel2
+        for (int i = 0; i < rel1.getSize(); i++) {
+            for (int j = 0; j < rel2.getSize(); j++) {
+                List<Cell> row = new ArrayList<>(rel1.getRow(i));
+                row.addAll(rel2.getRow(j));
+                result.insert(row);
+            }
+        }
+
+        return result;
     }
 
     @Override
