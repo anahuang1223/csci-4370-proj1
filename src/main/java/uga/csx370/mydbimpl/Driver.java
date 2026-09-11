@@ -24,10 +24,6 @@ public class Driver {
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
 
-
-        // Query #1: Get the titles and course ids of all Mech. Eng. (Mechanical Engineering) courses and the ids and names of all the instructors that teach it.
-        System.out.println("Get the list of all Mech. Eng. (Mechanical Engineering) courses and the ids and names of all the instructors that teach it.");
-       
         Relation instructor = new RelationBuilder()
                 .attributeNames(List.of("instructor_id", "name", "dept_name", "salary"))
                 .attributeTypes(List.of(Type.INTEGER, Type.STRING, Type.STRING, Type.DOUBLE))
@@ -35,33 +31,45 @@ public class Driver {
         instructor.loadData("C:/Users/leann/Desktop/Database Management/mysql-files/" + "instructor_export.csv");
 
         Relation teaches = new RelationBuilder()
-                .attributeNames(List.of("instr_id", "course_id", "sec_id", "semester", "year"))
-                .attributeTypes(List.of(Type.INTEGER, Type.INTEGER, Type.INTEGER, Type.STRING, Type.STRING, Type.INTEGER))
+                .attributeNames(List.of("instr_id", "c_id", "sec_id", "semester", "year"))
+                .attributeTypes(List.of(Type.INTEGER, Type.INTEGER, Type.INTEGER, Type.STRING, Type.INTEGER))
                 .build();
-        instructor.loadData("C:/Users/leann/Desktop/Database Management/mysql-files/" + "teaches_export.csv");
+        teaches.loadData("C:/Users/leann/Desktop/Database Management/mysql-files/" + "teaches_export.csv");
 
         Relation course = new RelationBuilder()
-                .attributeNames(List.of("c_id", "title", "dept_name", "credits"))
+                .attributeNames(List.of("course_id", "title", "dept_name", "credits"))
                 .attributeTypes(List.of(Type.INTEGER, Type.STRING, Type.STRING, Type.INTEGER))
                 .build();
-        instructor.loadData("C:/Users/leann/Desktop/Database Management/mysql-files/" + "course_export.csv");
+        course.loadData("C:/Users/leann/Desktop/Database Management/mysql-files/" + "course_export.csv");
 
-        RA ra_test = new RAImpl();
+
+        // Query #3: Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.
+                // Some Comp. Sci. courses listed in the course table were never taught by any instructor, so those will not be shown.
+        System.out.println(
+        "\nQuery #3 (Leanne): Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.\n");
         
-        Predicate isMechEngCourse = row -> row.get(2).getAsString() == "Mech. Eng.";
+        RA q3 = new RAImpl();
+        
+        // Select rows where course.dept_name = Comp. Sci.
+        Predicate isCompSci = row -> row.get(2).getAsString().equals("Comp. Sci.");
+        Relation selectCompSciCourses = q3.select(course, isCompSci);
 
-        Relation mechEngCourses = ra_test.join(course, teaches, isMechEngCourse);
-        //Relation rel1 = ra_test.select(course, mechEngCourses);
-        Relation teachesMechEng = ra_test.project(mechEngCourses, List.of("course_id", "title", "instr_id"));
+        // Select rows where course.course_id = teaches.course_id
+        Predicate teachesCourse = row -> row.get(0).getAsInt() == row.get(5).getAsInt();
+        Relation joinCompSciTeaches = q3.join(selectCompSciCourses, teaches, teachesCourse);
 
-        Relation instrMechEng = ra_test.join(teachesMechEng, instructor);
-        Relation course_instr_info = ra_test.project(instrMechEng, List.of("course_id", "title", "instr_id", "name"));
+        // Show course_id, title, instr_id for each course
+        Relation teachesCompSci = q3.project(joinCompSciTeaches, List.of("course_id", "title", "instr_id"));
+
+        // Join with instructor to get instructor name
+        Predicate isCourseInstr = row -> row.get(2).getAsInt() == row.get(3).getAsInt();
+        Relation instrCompSci = q3.join(teachesCompSci, instructor, isCourseInstr);
+        
+        // Show course_id, title, instr_id, instructor.name
+        Relation course_instr_info = q3.project(instrCompSci, List.of("course_id", "title", "instr_id", "name"));
         course_instr_info.print();
 
-
-
     }
-
 
 
 }
