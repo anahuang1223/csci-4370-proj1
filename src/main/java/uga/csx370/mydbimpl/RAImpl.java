@@ -259,8 +259,63 @@ public class RAImpl implements RA {
 
     @Override
     public Relation join(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'join'");
+        List<String> commonAttrs = new ArrayList<>();
+        //Attributes that exist in both relations
+        for (String attr : rel1.getAttrs()) {
+            if (rel2.hasAttr(attr)) {
+                commonAttrs.add(attr);
+            }
+        }
+        //Result with all attributes from rel1
+        List<String> resultAttrs = new ArrayList<>(rel1.getAttrs());
+        //Adding only the non-common attributes from rel2
+        for (String attr : rel2.getAttrs()) {
+            if (!commonAttrs.contains(attr)) {
+                resultAttrs.add(attr);
+            }
+        }
+        //Result types with all types from rel1
+        List<Type> resultTypes = new ArrayList<>(rel1.getTypes());
+        //Adding types for the non-common attributes from rel2
+        for (String attr : rel2.getAttrs()) {
+            if (!commonAttrs.contains(attr)) {
+                int index = rel2.getAttrIndex(attr);
+                resultTypes.add(rel2.getTypes().get(index));
+            }
+        }
+        //Building the resulting relation
+        Relation result = new RelationBuilder()
+                .attributeNames(resultAttrs)
+                .attributeTypes(resultTypes)
+                .build();
+        //Comparing every row from rel1 with every row from rel2
+        for (int i = 0; i < rel1.getSize(); i++) {
+            List<Cell> row1 = rel1.getRow(i);
+            for (int j = 0; j < rel2.getSize(); j++) {
+                List<Cell> row2 = rel2.getRow(j);
+                boolean matches = true;
+                //Common attribute shall have the same value
+                for (String attr : commonAttrs) {
+                    int index1 = rel1.getAttrIndex(attr);
+                    int index2 = rel2.getAttrIndex(attr);
+                    if (!row1.get(index1).equals(row2.get(index2))) {
+                        matches = false;
+                    }
+                }
+                if (matches) {
+                    List<Cell> resultRow = new ArrayList<>(row1);
+                    //Adding only non-common attributes from rel2
+                    for (String attr : rel2.getAttrs()) {
+                        if (!commonAttrs.contains(attr)) {
+                            int index2 = rel2.getAttrIndex(attr);
+                            resultRow.add(row2.get(index2));
+                        }
+                    }
+                    result.insert(resultRow);
+                }
+            }
+        }
+        return result;
     }
 
     @Override
