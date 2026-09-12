@@ -24,8 +24,12 @@ public class Driver {
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
 
+        // PATH TO MYSQL-FILES
         String path = "C:/Users/leann/Desktop/Database Management/mysql-files/";
 
+        /**********
+         * TABLES *
+         **********/
 
         Relation instructor = new RelationBuilder()
                 .attributeNames(List.of("instr_ID", "name", "dept_name", "salary"))
@@ -58,6 +62,13 @@ public class Driver {
         advisor.loadData(path + "advisor_export.csv");
 
 
+        /***********
+         * QUERIES *
+         ***********/
+
+        // Note: Sach's query does not work on my computer. Mine (Leanne's) is query #2
+
+        // Query #1: Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
         RAImpl engine = new RAImpl();
 
         System.out.println("Query #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.\n");
@@ -92,30 +103,36 @@ public class Driver {
         instr_combined.print();
 
 
+
+
         // Query #2: Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.
-                // Some Comp. Sci. courses listed in the course table were never taught by any instructor, so those will not be shown.
+        
+        
         System.out.println(
-        "\nQuery #2 (Leanne): Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.\n");
+        "\nQuery #3 (Leanne): Find the course ID and title of any Comp. Sci. course that has been taught by an instructor, "
+        + "along with the ID and names of those instructors.\n");
         
         RA q3 = new RAImpl();
         
-        // Select rows where course.dept_name = Comp. Sci.
+        // SELECT rows where " course.dept_name = 'Comp. Sci.' "
         Predicate isCompSci = row -> row.get(2).getAsString().equals("Comp. Sci.");
         Relation selectCompSciCourses = q3.select(course, isCompSci);
 
-        // Select rows where course.course_id = teaches.course_id
+        // JOIN [teaches] and [course] where " course.course_id = teaches.course_id "
+        // Some CS courses listed in the [course] table are not in the [teaches] table (course was never taught by an insturctor)
+        // so those will not be displayed.
         Predicate teachesCourse = row -> row.get(0).getAsString().equals(row.get(5).getAsString());
         Relation joinCompSciTeaches = q3.join(selectCompSciCourses, teaches, teachesCourse);
 
-        // Show course_id, title, instr_id for each course
+        // PROJECT course_id, course.title, teaches.instructor_id for each course
         Relation teachesCompSci = q3.project(joinCompSciTeaches, List.of("course_id", "title", "instructor_ID"));
-
-        // Join with instructor where instructorID matches
+        
+        // JOIN with [instructor] where " teaches.instructor_ID = instructor.instr_ID ", in order to get instructor.name
         Predicate isCourseInstr = row -> row.get(2).getAsString().equals(row.get(3).getAsString());
         Relation instrCompSci = q3.join(teachesCompSci, instructor, isCourseInstr);
         
-        // Show course_id, title, instr_id, instructor.name
-        Relation course_instr_info = q3.project(instrCompSci, List.of("course_id", "title", "instructor_ID", "name"));
+        // PROJECT course_id, course.title, instructor.instr_id, instructor.name
+        Relation course_instr_info = q3.project(instrCompSci, List.of("course_id", "title", "instr_ID", "name"));
         course_instr_info.print();
 
     }
