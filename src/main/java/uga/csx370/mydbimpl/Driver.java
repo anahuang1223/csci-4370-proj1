@@ -87,7 +87,6 @@ public class Driver {
                 .attributeNames(List.of("course_id","sec_id","semester","year", "building", "room_number", "time_slot_id"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER, Type.STRING, Type.STRING, Type.STRING))
                 .build();
-
         section.loadData(path + "section_export.csv");
 
 
