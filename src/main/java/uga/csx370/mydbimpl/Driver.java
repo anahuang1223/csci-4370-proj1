@@ -23,6 +23,7 @@ public class Driver {
         // After creating the table, data is loaded from a CSV file.
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
+        
 
         // PATH TO MYSQL-FILES
         String path = "C:/Users/leann/Desktop/Database Management/mysql-files/";
@@ -31,42 +32,60 @@ public class Driver {
          * TABLES *
          **********/
 
+        // INSTRUCTOR
         Relation instructor = new RelationBuilder()
                 .attributeNames(List.of("instr_ID", "name", "dept_name", "salary"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
                 .build();
         instructor.loadData(path + "instructor_export.csv");
 
+        // TEACHES
         Relation teaches = new RelationBuilder()
                 .attributeNames(List.of("instructor_ID", "c_id", "sec_id", "semester", "year"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
                 .build();
         teaches.loadData(path + "teaches_export.csv");
 
+        // COURSE
         Relation course = new RelationBuilder()
                 .attributeNames(List.of("course_id", "title", "dept_name", "credits"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
                 .build();
         course.loadData(path + "course_export.csv");
 
+        // STUDENT
         Relation student = new RelationBuilder()
                 .attributeNames(List.of("student_id", "name", "dept_name", "tot_credits"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
                 .build();
         student.loadData(path + "student_export.csv");
 
+        // ADVISOR
         Relation advisor = new RelationBuilder()
                 .attributeNames(List.of("s_ID", "i_ID"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING))
                 .build();
         advisor.loadData(path + "advisor_export.csv");
 
+        // PREREQ
+        Relation prereq = new RelationBuilder()
+                .attributeNames(List.of("course_id", "prereq_id"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
+                .build();
+        prereq.loadData(path + "prereq_export.csv");
+
+        // SECTION
+        Relation section = new RelationBuilder()
+                .attributeNames(List.of("course_id","sec_id","semester","year", "building", "room_number", "time_slot_id"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER, Type.STRING, Type.STRING, Type.STRING))
+                .build();
+
+        section.loadData(path + "section_export.csv");
+
 
         /***********
          * QUERIES *
          ***********/
-
-        // Note: Sach's query does not work on my computer. Mine (Leanne's) is query #2
 
         // Query #1: Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
         RAImpl engine = new RAImpl();
@@ -103,10 +122,39 @@ public class Driver {
         instr_combined.print();
 
 
+        // Query #2 (Leen): Get the course ID, course title, semester, and year for courses that have prerequisites and were offered in 2008.
+        System.out.println(
+            "\nQuery #2 (Leen): Get the course ID, course title, semester, and year "
+            + "for courses that have prerequisites and were offered in 2008.\n"
+        );
+
+        //course join prereq
+        Relation coursePrereq = engine.join(course, prereq);
+
+        //(course join prereq) join section
+        Relation coursePrereqSection = engine.join(coursePrereq, section);
+
+        //select rows where year = 2008
+        Relation courses2008 = engine.select(
+                coursePrereqSection,
+                row -> row.get(
+                        coursePrereqSection.getAttrIndex("year")
+                ).getAsInt() == 2008
+        );
+
+        //project the requested attributes
+        Relation query2Result = engine.project(
+                courses2008,
+                List.of("course_id", "title", "semester", "year")
+        );
+
+        query2Result.print();
 
 
-        // Query #2: Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.
-        
+
+        // Query #3 (Leanne): Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.
+        // Some CS courses listed in the [course] table are not in the [teaches] table (course was never taught by an instructor apparently)
+        // so those will not be displayed.
         
         System.out.println(
         "\nQuery #3 (Leanne): Find the course ID and title of any Comp. Sci. course that has been taught by an instructor, "
@@ -119,8 +167,6 @@ public class Driver {
         Relation selectCompSciCourses = q3.select(course, isCompSci);
 
         // JOIN [teaches] and [course] where " course.course_id = teaches.course_id "
-        // Some CS courses listed in the [course] table are not in the [teaches] table (course was never taught by an insturctor)
-        // so those will not be displayed.
         Predicate teachesCourse = row -> row.get(0).getAsString().equals(row.get(5).getAsString());
         Relation joinCompSciTeaches = q3.join(selectCompSciCourses, teaches, teachesCourse);
 
