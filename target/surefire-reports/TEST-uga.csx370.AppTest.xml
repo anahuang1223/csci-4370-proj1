@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="uga.csx370.AppTest" time="0.205" tests="4" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1\target\test-classes;C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1\target\classes;C:\Users\leann\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0\junit-jupiter-api-5.11.0.jar;C:\Users\leann\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\leann\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0\junit-platform-commons-1.11.0.jar;C:\Users\leann\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\leann\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.0\junit-jupiter-params-5.11.0.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="America/New_York"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21.0.12.1\bin"/>
+    <property name="sun.java.command" value="C:\Users\leann\AppData\Local\Temp\surefire14524153025150327255\surefirebooter-20260905230821693_3.jar C:\Users\leann\AppData\Local\Temp\surefire14524153025150327255 2026-09-05T23-08-21_338-jvmRun1 surefire-20260905230821693_1tmp surefire_0-20260905230821693_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1\target\test-classes;C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1\target\classes;C:\Users\leann\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0\junit-jupiter-api-5.11.0.jar;C:\Users\leann\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\leann\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0\junit-platform-commons-1.11.0.jar;C:\Users\leann\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\leann\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.0\junit-jupiter-params-5.11.0.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\leann"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-08-18"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-21.0.12.1"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\leann\AppData\Local\Temp\surefire14524153025150327255\surefirebooter-20260905230821693_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.12.1+1-LTS-4"/>
+    <property name="user.name" value="leann"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="C:\Users\leann\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\leann\AppData\Local\Temp\"/>
+    <property name="java.version" value="21.0.12.1"/>
+    <property name="user.dir" value="C:\Users\leann\Desktop\csci-4370-proj1\csci-4370-proj1"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-21.0.12.1\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\Users\leann\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\leann\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Python313\Scripts\;C:\Python313\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Users\leann\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\leann\AppData\Local\Programs\Python\Python311\;C:\Users\leann\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.1.2\bin;;C:\Users\leann\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\leann\AppData\Local\GitHubDesktop\bin;C:\Users\leann\AppData\Roaming\npm;C:\Users\leann\AppData\Local\Programs\DockerDesktop\resources\bin;c:\Users\leann\.vscode\extensions\vscjava.vscode-java-debug-0.59.0\bundled\scripts\noConfigScripts;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="21.0.12.1+1-LTS-4"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="shouldAnswerWithTrue" classname="uga.csx370.AppTest" time="0.034"/>
+  <testcase name="project" classname="uga.csx370.AppTest" time="0.008">
+    <system-out><![CDATA[PROJECT: SUCCESS
+]]></system-out>
+  </testcase>
+  <testcase name="project_throws_exception" classname="uga.csx370.AppTest" time="0.011">
+    <system-out><![CDATA[PROJECT_EXCEPTION: SUCCESS
+]]></system-out>
+  </testcase>
+  <testcase name="select_test" classname="uga.csx370.AppTest" time="0.11">
+    <system-out><![CDATA[+-------+---------+------------+----------+
+| id    | name    | dept_name  | salary   | 
++-------+---------+------------+----------+
+| 14365 | Lembr   | Accounting | 32241.56 | 
+| 31955 | Moreira | Accounting | 71351.42 | 
+| 57180 | Hau     | Accounting | 43966.29 | 
+| 79081 | Ullman  | Accounting | 47307.10 | 
++-------+---------+------------+----------+
+isAccounting: SUCCESS
++-------+------------+-------------+-----------+
+| id    | name       | dept_name   | salary    | 
++-------+------------+-------------+-----------+
+| 16807 | Yazdi      | Athletics   |  98333.65 | 
+| 19368 | Wieland    | Pol. Sci.   | 124651.41 | 
+| 25946 | Liley      | Languages   |  90891.69 | 
+| 28400 | Atanassov  | Statistics  |  84982.92 | 
+|  3199 | Gustafsson | Elec. Eng.  |  82534.37 | 
+|  3335 | Bourrier   | Comp. Sci.  |  80797.83 | 
+| 34175 | Bondi      | Comp. Sci.  | 115469.11 | 
+| 37687 | Arias      | Statistics  | 104563.38 | 
+|  4233 | Luo        | English     |  88791.45 | 
+| 48507 | Lent       | Mech. Eng.  | 107978.47 | 
+| 48570 | Sarkar     | Pol. Sci.   |  87549.80 | 
+| 50330 | Shuming    | Physics     | 108011.81 | 
+| 52647 | Bancilhon  | Pol. Sci.   |  87958.01 | 
+| 63287 | Jaekel     | Athletics   | 103146.87 | 
+| 63395 | McKinnon   | Cybernetics |  94333.99 | 
+|  6569 | Mingoz     | Finance     | 105311.38 | 
+| 73623 | Sullivan   | Elec. Eng.  |  90038.09 | 
+| 74420 | Voronina   | Physics     | 121141.99 | 
+| 74426 | Kenje      | Marketing   | 106554.73 | 
+| 77346 | Mahmoud    | Geology     |  99382.59 | 
+| 79653 | Levine     | Elec. Eng.  |  89805.83 | 
+| 90376 | Bietzk     | Cybernetics | 117836.50 | 
+| 95709 | Sakurai    | English     | 118143.98 | 
+| 96895 | Mird       | Marketing   | 119921.41 | 
+| 99052 | Dale       | Cybernetics |  93348.83 | 
++-------+------------+-------------+-----------+
+salary_gt_80K: SUCCESS
++--------+-------------+------------+---------------+
+| stu_id | name        | dept_name  | total_credits | 
++--------+-------------+------------+---------------+
+|  10076 | Duan        | Civil Eng. |           105 | 
+|  12362 | Zhanr       | Civil Eng. |           115 | 
+|  17133 | Kang        | Civil Eng. |           109 | 
+|  18752 | Schulman    | Civil Eng. |           102 | 
+|   2848 | Carr        | Civil Eng. |           121 | 
+|  30397 | Dism        | Civil Eng. |           116 | 
+|  32385 | Park        | Civil Eng. |           120 | 
+|  33206 | McCormack   | Civil Eng. |           109 | 
+|  40677 | Ponnambalam | Civil Eng. |           127 | 
+|  41973 | Werf        | Civil Eng. |           115 | 
+|  49339 | Snif        | Civil Eng. |           107 | 
+|  51923 | Peterson    | Civil Eng. |           128 | 
+|  60762 | Bernstein   | Civil Eng. |           120 | 
+|  64039 | Aarde       | Civil Eng. |           120 | 
+|  64938 | Kaep        | Civil Eng. |           126 | 
+|  66229 | Qvi         | Civil Eng. |           128 | 
+|  81785 | Crues       | Civil Eng. |           102 | 
+|   8192 | Verma       | Civil Eng. |           123 | 
+|  86641 | Dair        | Civil Eng. |           101 | 
+|  91063 | Dair        | Civil Eng. |           105 | 
+|  96067 | Sugavanam   | Civil Eng. |           113 | 
+|  97551 | Labaye      | Civil Eng. |           128 | 
+|  99660 | OMalley     | Civil Eng. |           128 | 
++--------+-------------+------------+---------------+
+credits_civil_eng: SUCCESS
+]]></system-out>
+  </testcase>
+</testsuite>

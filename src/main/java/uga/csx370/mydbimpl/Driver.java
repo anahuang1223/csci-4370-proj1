@@ -23,7 +23,6 @@ public class Driver {
         // After creating the table, data is loaded from a CSV file.
         // Path should be replaced with a correct file path for a compatible
         // CSV file.
-        
 
         // PATH TO MYSQL-FILES
         String path = "C:/Users/leann/Desktop/Database Management/mysql-files/";
