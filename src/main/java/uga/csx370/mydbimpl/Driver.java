@@ -60,6 +60,89 @@ public class Driver {
         Relation instr_combined = engine.intersect(instr_f25, instr_cyb_info);
 
         instr_combined.print();
+        //Query #2 (Leen)
+        System.out.println(
+            "\nQuery #2 (Leen): Get the course ID, course title, semester, and year "
+            + "for courses that have prerequisites and were offered in 2008.\n"
+        );
+
+        //load course relation
+        Relation course = new RelationBuilder()
+                .attributeNames(List.of(
+                        "course_id",
+                        "title",
+                        "dept_name",
+                        "credits"))
+                .attributeTypes(List.of(
+                        Type.STRING,
+                        Type.STRING,
+                        Type.STRING,
+                        Type.INTEGER))
+                .build();
+
+        course.loadData(
+                "D:/activity02_exports/mysql-files/course_export.csv"
+        );
+
+        //load prereq relation
+        Relation prereq = new RelationBuilder()
+                .attributeNames(List.of(
+                        "course_id",
+                        "prereq_id"))
+                .attributeTypes(List.of(
+                        Type.STRING,
+                        Type.STRING))
+                .build();
+
+        prereq.loadData(
+                "D:/activity02_exports/mysql-files/prereq_export.csv"
+        );
+
+        //load section relation
+        Relation section = new RelationBuilder()
+                .attributeNames(List.of(
+                        "course_id",
+                        "sec_id",
+                        "semester",
+                        "year",
+                        "building",
+                        "room_number",
+                        "time_slot_id"))
+                .attributeTypes(List.of(
+                        Type.STRING,
+                        Type.STRING,
+                        Type.STRING,
+                        Type.INTEGER,
+                        Type.STRING,
+                        Type.STRING,
+                        Type.STRING))
+                .build();
+
+        section.loadData(
+                "D:/activity02_exports/mysql-files/section_export.csv"
+        );
+
+        //course join prereq
+        Relation coursePrereq = engine.join(course, prereq);
+
+        //(course join prereq) join section
+        Relation coursePrereqSection = engine.join(coursePrereq, section);
+
+        //select rows where year = 2008
+        Relation courses2008 = engine.select(
+                coursePrereqSection,
+                row -> row.get(
+                        coursePrereqSection.getAttrIndex("year")
+                ).getAsInt() == 2008
+        );
+
+        //project the requested attributes
+        Relation query2Result = engine.project(
+                courses2008,
+                List.of("course_id", "title", "semester", "year")
+        );
+
+        query2Result.print();
     }
 
 }
