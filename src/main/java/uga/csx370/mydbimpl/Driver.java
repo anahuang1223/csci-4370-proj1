@@ -89,7 +89,7 @@ public class Driver {
         // Query #1: Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
         RAImpl engine = new RAImpl();
 
-        System.out.println("Query #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.\n");
+        System.out.println("\nQuery #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.\n");
 
         // who taught Fall 2004: SELECT [semester="Fall" AND year=2004] (teaches)
         Relation t_f25 = engine.select(teaches, row -> row.get(3).getAsString().equals("Fall") && row.get(4).getAsInt() == 2004);
