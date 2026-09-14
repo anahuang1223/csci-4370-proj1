@@ -56,7 +56,7 @@ public class Driver {
 
         // COURSE
         Relation course = new RelationBuilder()
-                .attributeNames(List.of("course_id", "title", "dept_name", "credits"))
+                .attributeNames(List.of("course_id", "title", "course_dept_name", "credits"))
                 .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
                 .build();
         course.loadData(path + "course_export.csv");
@@ -90,9 +90,11 @@ public class Driver {
         section.loadData(path + "section_export.csv");
 
 
+        
         /***********
          * QUERIES *
          ***********/
+
 
         // Query #1: Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
         RAImpl engine = new RAImpl();
@@ -127,6 +129,7 @@ public class Driver {
         Relation instr_combined = engine.intersect(instr_f25, instr_cyb_info);
 
         instr_combined.print();
+
 
 
         // Query #2 (Leen): Get the course ID, course title, semester, and year for courses that have prerequisites and were offered in 2008.
@@ -187,6 +190,32 @@ public class Driver {
         // PROJECT course_id, course.title, instructor.instr_id, instructor.name
         Relation course_instr_info = q3.project(instrCompSci, List.of("course_id", "title", "instr_ID", "name"));
         course_instr_info.print();
+
+
+
+        // Query #4 (Ana): Find the course ID and title of courses taught by instructors with a salary greater than 100,000.
+
+        System.out.println("\nQuery #4 (Ana): Find the course ID and title of courses taught by instructors with a salary greater than 100,000.\n");
+        RA ra = new RAImpl();
+        
+        int instrIdIdx = instructor.getAttrIndex("instr_ID");
+        int teachesIdIdx = instructor.getAttrs().size() + teaches.getAttrIndex("instructor_ID");
+        Predicate instrTeachesPred = row -> row.get(instrIdIdx).equals(row.get(teachesIdIdx));
+        // theta join
+        Relation instrTeaches = ra.join(instructor, teaches, instrTeachesPred);
+        int teachesCourseIdx = instrTeaches.getAttrIndex("c_id");
+        int courseIdIdx = instrTeaches.getAttrs().size() + course.getAttrIndex("course_id");
+        Predicate teachesCoursePred = row -> row.get(teachesCourseIdx).equals(row.get(courseIdIdx));
+        // theta join
+        Relation instrTeachesCourse = ra.join(instrTeaches, course, teachesCoursePred);
+        int salaryIdx = instrTeachesCourse.getAttrIndex("salary");
+        Predicate highSalary = row -> row.get(salaryIdx).getAsDouble() > 100000;
+        // select
+        Relation filtered = ra.select(instrTeachesCourse, highSalary);
+        // project
+        Relation answer = ra.project(filtered, List.of("course_id", "title"));
+        answer.print();
+
     }
 
 }
