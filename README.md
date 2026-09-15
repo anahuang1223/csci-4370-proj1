@@ -7,8 +7,8 @@ _**ABOUT:** In this project we implemented Relational Algebra operations in Java
 ## Contributions
 
 - **Sach:** union, diff, intersect and query #1
-- **Anna:**
-- **Leanne:** 
-- **Leen:**
-- **Travis:**
+- **Anna:** theta join and query #4
+- **Leanne:** project, select and query #3
+- **Leen:** natural join and query #2
+- **Travis:** rename, cartesian product and query #5
 
