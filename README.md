@@ -6,7 +6,7 @@ _**ABOUT:** In this project we implemented Relational Algebra operations in Java
 
 ## Contributions
 
-- **Sach:** union, diff, intersect and Query #1
+- **Sach:** union, diff, intersect and query #1
 - **Anna:**
 - **Leanne:** 
 - **Leen:**
