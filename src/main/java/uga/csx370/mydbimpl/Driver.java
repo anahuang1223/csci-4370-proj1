@@ -33,8 +33,8 @@ public class Driver {
         */
 
 
-        // PATH TO MYSQL-FILES (REPLACE WITH YOUR PATH HERE)
-        String path = "C:/Users/leann/Desktop/Database Management/mysql-files/";
+        // PATH TO MYSQL-FILES 
+        String path = "./mysql-files/";
 
         /**********
          * TABLES *
