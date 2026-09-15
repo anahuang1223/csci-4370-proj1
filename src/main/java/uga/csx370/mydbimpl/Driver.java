@@ -96,7 +96,7 @@ public class Driver {
          ***********/
 
 
-        // Query #1: Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
+        // Query #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
         RAImpl engine = new RAImpl();
 
         System.out.println("\nQuery #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.\n");
