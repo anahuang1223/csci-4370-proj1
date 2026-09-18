@@ -1,6 +1,6 @@
 # Project 1: Group 6
 
-Members: Sach, Ana, Leanne, Leen, and Travis
+Members: Sach Shrestha, Leen Quazi, Leanne Wong, Ana Huang, and Travis Burton
 
 ## About: 
 
@@ -9,7 +9,7 @@ In this project we implemented Relational Algebra operations in Java using the s
 ## Contributions
 
 - Sach: union, diff, intersect and query #1
-- Ana: theta join and query #4
-- Leanne: project, select and query #3
 - Leen: natural join and query #2
+- Leanne: project, select and query #3
+- Ana: theta join and query #4
 - Travis: rename, cartesian product and query #5
