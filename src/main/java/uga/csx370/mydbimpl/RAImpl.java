@@ -101,7 +101,6 @@ public class RAImpl implements RA {
 
     @Override
     public Relation union(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
         int r1size = rel1.getSize();
         int r2size = rel2.getSize();
         if (!rel1.getTypes().equals(rel2.getTypes())) {
@@ -135,7 +134,6 @@ public class RAImpl implements RA {
 
     @Override
     public Relation intersect(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
         int r1size = rel1.getSize();
         int r2size = rel2.getSize();
         if (!rel1.getTypes().equals(rel2.getTypes())) {
@@ -167,7 +165,6 @@ public class RAImpl implements RA {
 
     @Override
     public Relation diff(Relation rel1, Relation rel2) {
-        // TODO Auto-generated method stub
         int r1size = rel1.getSize();
         int r2size = rel2.getSize();
         if (!rel1.getTypes().equals(rel2.getTypes())) {
