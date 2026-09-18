@@ -183,7 +183,6 @@ public class RAImpl implements RA {
     
     @Override
     public Relation rename(Relation rel, List<String> origAttr, List<String> renamedAttr) {
-        // origAttr and renamedAttr must line up one-to-one
         if (origAttr.size() != renamedAttr.size()) {
             throw new IllegalArgumentException("origAttr and renamedAttr must have the same number of attributes.");
         }
@@ -197,7 +196,7 @@ public class RAImpl implements RA {
             newAttrs.set(rel.getAttrIndex(origAttr.get(i)), renamedAttr.get(i));
         }
 
-        // Same types, same rows, only the attribute names change
+        // Only the attribute names change
         Relation newRel = new RelationBuilder()
                 .attributeNames(newAttrs)
                 .attributeTypes(rel.getTypes())
@@ -212,14 +211,13 @@ public class RAImpl implements RA {
 
     @Override
     public Relation cartesianProduct(Relation rel1, Relation rel2) {
-        // No shared attribute names are allowed
         for (String attr : rel1.getAttrs()) {
             if (rel2.hasAttr(attr)) {
                 throw new IllegalArgumentException("Relations have common attribute: " + attr);
             }
         }
 
-        // Result schema: rel1 attributes/types followed by rel2 attributes/types
+        // Rel1 attributes/types are followed by rel2 attributes/types
         List<String> attrs = new ArrayList<>(rel1.getAttrs());
         attrs.addAll(rel2.getAttrs());
         List<Type> types = new ArrayList<>(rel1.getTypes());
