@@ -216,9 +216,11 @@ public class Driver {
         answer.print();
 
 
+        
         // Query #5 (Travis): Find the Comp. Sci. instructors who advise students from outside Comp. Sci. who are close to graduating (90 or more credits), along with those students.
-        System.out.println("\nQuery #5 (Travis): Find the Comp. Sci. instructors who advise students from outside Comp. Sci. who are close to graduating (90 or more credits), along with those students.\n");
-        System.out.println(" The query should result in the instructor's name and department, the student's name and department, and the student's total credits");
+       
+        System.out.println("\nQuery #5 (Travis): Find the Comp. Sci. instructors who advise students from outside Comp. Sci. who are close to graduating (90 or more credits), along with those students.");
+        System.out.println("The query should result in the instructor's name and department, the student's name and department, and the student's total credits.\n");
         
         int instrDeptIdx = instructor.getAttrIndex("dept_name");
         Predicate csDept = row -> row.get(instrDeptIdx).getAsString().equals("Comp. Sci.");
