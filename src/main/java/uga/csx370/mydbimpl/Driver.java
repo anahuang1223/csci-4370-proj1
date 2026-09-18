@@ -216,6 +216,192 @@ public class Driver {
         Relation answer = ra.project(filtered, List.of("course_id", "title"));
         answer.print();
 
+    }
+
+
+        // PATH TO MYSQL-FILES 
+        String path = "./mysql-files/";
+
+        /**********
+         * TABLES *
+         **********/
+
+        // INSTRUCTOR
+        Relation instructor = new RelationBuilder()
+                .attributeNames(List.of("instr_ID", "name", "dept_name", "salary"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.DOUBLE))
+                .build();
+        instructor.loadData(path + "instructor_export.csv");
+
+        // TEACHES
+        Relation teaches = new RelationBuilder()
+                .attributeNames(List.of("instructor_ID", "c_id", "sec_id", "semester", "year"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
+                .build();
+        teaches.loadData(path + "teaches_export.csv");
+
+        // COURSE
+        Relation course = new RelationBuilder()
+                .attributeNames(List.of("course_id", "title", "course_dept_name", "credits"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
+                .build();
+        course.loadData(path + "course_export.csv");
+
+        // STUDENT
+        Relation student = new RelationBuilder()
+                .attributeNames(List.of("student_id", "name", "dept_name", "tot_credits"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER))
+                .build();
+        student.loadData(path + "student_export.csv");
+
+        // ADVISOR
+        Relation advisor = new RelationBuilder()
+                .attributeNames(List.of("s_ID", "i_ID"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
+                .build();
+        advisor.loadData(path + "advisor_export.csv");
+
+        // PREREQ
+        Relation prereq = new RelationBuilder()
+                .attributeNames(List.of("course_id", "prereq_id"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING))
+                .build();
+        prereq.loadData(path + "prereq_export.csv");
+
+        // SECTION
+        Relation section = new RelationBuilder()
+                .attributeNames(List.of("course_id","sec_id","semester","year", "building", "room_number", "time_slot_id"))
+                .attributeTypes(List.of(Type.STRING, Type.STRING, Type.STRING, Type.INTEGER, Type.STRING, Type.STRING, Type.STRING))
+                .build();
+        section.loadData(path + "section_export.csv");
+
+
+        
+        /***********
+         * QUERIES *
+         ***********/
+
+
+        // Query #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.
+        RAImpl engine = new RAImpl();
+
+        System.out.println("\nQuery #1 (Sach): Find the names and IDs of instructors who taught in the Fall 2004 semester AND who advise students in the Cybernetics department.\n");
+
+        // who taught Fall 2004: SELECT [semester="Fall" AND year=2004] (teaches)
+        Relation t_f25 = engine.select(teaches, row -> row.get(3).getAsString().equals("Fall") && row.get(4).getAsInt() == 2004);
+
+        // joining with instructor to get access to name: JOIN [instr.ID = t_f25.ID] (instructor)
+        Relation i_t = engine.join(instructor, t_f25, row -> row.get(0).getAsString().equals(row.get(4).getAsString()));
+
+        // projecting ID and name of instructors who taught in Fall 2004: PROJECT [instr_ID, name] (i_t)
+        Relation instr_f25 = engine.project(i_t, List.of("instr_ID", "name"));
+
+        // students in the Cybernetics department: SELECT [dept_name="Cybernetics"] (student)
+        Relation s_cyb = engine.select(student, row -> row.get(2).getAsString().equals("Cybernetics"));
+
+        // joining with advisor to get their instructor IDs: JOIN [s_cyb.ID=advisor.s_ID] (advisor)
+        Relation cyb_adv = engine.join(advisor, s_cyb, row -> row.get(0).getAsString().equals(row.get(2).getAsString()));
+
+        // projecting the instructor IDs: PROJECT [i_ID] (cyb_adv)
+        Relation cyb_instr = engine.project(cyb_adv, List.of("i_ID"));
+
+        // joining with instructor to get access to name: JOIN [cyb_instr.i_ID=instructor.ID] (instructor)
+        Relation instr_cyb = engine.join(instructor, cyb_instr, row -> row.get(0).getAsString().equals(row.get(4).getAsString()));
+
+        // projecting the ID and names of instructors who advise students in the Cybernetics department: PROJECT [ID, name] (instr_cyb)
+        Relation instr_cyb_info = engine.project(instr_cyb, List.of("instr_ID", "name"));
+
+        // intersecting instructors who taught in Fall 2004 & instructors who advise students in the Cybernetics department: instr_cyb_info INTERSECT instr_f25
+        Relation instr_combined = engine.intersect(instr_f25, instr_cyb_info);
+
+        instr_combined.print();
+
+
+
+        // Query #2 (Leen): Get the course ID, course title, semester, and year for courses that have prerequisites and were offered in 2008.
+        System.out.println(
+            "\nQuery #2 (Leen): Get the course ID, course title, semester, and year "
+            + "for courses that have prerequisites and were offered in 2008.\n"
+        );
+
+        //course join prereq
+        Relation coursePrereq = engine.join(course, prereq);
+
+        //(course join prereq) join section
+        Relation coursePrereqSection = engine.join(coursePrereq, section);
+
+        //select rows where year = 2008
+        Relation courses2008 = engine.select(
+                coursePrereqSection,
+                row -> row.get(
+                        coursePrereqSection.getAttrIndex("year")
+                ).getAsInt() == 2008
+        );
+
+        //project the requested attributes
+        Relation query2Result = engine.project(
+                courses2008,
+                List.of("course_id", "title", "semester", "year")
+        );
+
+        query2Result.print();
+
+
+
+        // Query #3 (Leanne): Find the course ID and title of any Computer Science course that has been taught by an instructor, along with the ID and names of those instructors.
+        // Some CS courses listed in the [course] table are not in the [teaches] table (course was never taught by an instructor apparently)
+        // so those will not be displayed.
+        
+        System.out.println(
+        "\nQuery #3 (Leanne): Find the course ID and title of any Comp. Sci. course that has been taught by an instructor, "
+        + "along with the ID and names of those instructors.\n");
+        
+        RA q3 = new RAImpl();
+        
+        // SELECT rows where " course.dept_name = 'Comp. Sci.' "
+        Predicate isCompSci = row -> row.get(2).getAsString().equals("Comp. Sci.");
+        Relation selectCompSciCourses = q3.select(course, isCompSci);
+
+        // JOIN [teaches] and [course] where " course.course_id = teaches.course_id "
+        Predicate teachesCourse = row -> row.get(0).getAsString().equals(row.get(5).getAsString());
+        Relation joinCompSciTeaches = q3.join(selectCompSciCourses, teaches, teachesCourse);
+
+        // PROJECT course_id, course.title, teaches.instructor_id for each course
+        Relation teachesCompSci = q3.project(joinCompSciTeaches, List.of("course_id", "title", "instructor_ID"));
+        
+        // JOIN with [instructor] where " teaches.instructor_ID = instructor.instr_ID ", in order to get instructor.name
+        Predicate isCourseInstr = row -> row.get(2).getAsString().equals(row.get(3).getAsString());
+        Relation instrCompSci = q3.join(teachesCompSci, instructor, isCourseInstr);
+        
+        // PROJECT course_id, course.title, instructor.instr_id, instructor.name
+        Relation course_instr_info = q3.project(instrCompSci, List.of("course_id", "title", "instr_ID", "name"));
+        course_instr_info.print();
+
+
+
+        // Query #4 (Ana): Find the course ID and title of courses taught by instructors with a salary greater than 100,000.
+
+        System.out.println("\nQuery #4 (Ana): Find the course ID and title of courses taught by instructors with a salary greater than 100,000.\n");
+        RA ra = new RAImpl();
+        
+        int instrIdIdx = instructor.getAttrIndex("instr_ID");
+        int teachesIdIdx = instructor.getAttrs().size() + teaches.getAttrIndex("instructor_ID");
+        Predicate instrTeachesPred = row -> row.get(instrIdIdx).equals(row.get(teachesIdIdx));
+        // theta join
+        Relation instrTeaches = ra.join(instructor, teaches, instrTeachesPred);
+        int teachesCourseIdx = instrTeaches.getAttrIndex("c_id");
+        int courseIdIdx = instrTeaches.getAttrs().size() + course.getAttrIndex("course_id");
+        Predicate teachesCoursePred = row -> row.get(teachesCourseIdx).equals(row.get(courseIdIdx));
+        // theta join
+        Relation instrTeachesCourse = ra.join(instrTeaches, course, teachesCoursePred);
+        int salaryIdx = instrTeachesCourse.getAttrIndex("salary");
+        Predicate highSalary = row -> row.get(salaryIdx).getAsDouble() > 100000;
+        // select
+        Relation filtered = ra.select(instrTeachesCourse, highSalary);
+        // project
+        Relation answer = ra.project(filtered, List.of("course_id", "title"));
+        answer.print();
+
 
 
        System.out.println("\nQuery #5 (Travis): Find the Comp. Sci. instructors who advise students from outside Comp. Sci. who are close to graduating (90 or more credits), along with those students.\n");
